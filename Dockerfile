@@ -23,7 +23,7 @@ RUN UPSOURCE_VERSION=3.0.4291 && \
     \
     DOWNLOAD_URL=https://download.jetbrains.com/upsource/upsource-$UPSOURCE_VERSION.zip && \
     echo Downloading $DOWNLOAD_URL to $(pwd) && \
-    wget "$DOWNLOAD_URL" --no-verbose --output-document upsource.zip && \
+    wget "$DOWNLOAD_URL" --progress bar:force:noscroll --output-document upsource.zip && \
     \
     echo Extracting to $(pwd) && \
     unzip ./upsource.zip -d . -x internal/java/linux-amd64/man/* internal/java/windows-amd64/* internal/java/mac-x64/* && \
