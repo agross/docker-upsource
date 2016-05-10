@@ -101,16 +101,14 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
   $UPSOURCE_LOGS/upsource-frontend/*.log
   $UPSOURCE_LOGS/upsource-monitoring/*.log
   $UPSOURCE_LOGS/upsource-psi/*.log
-  $UPSOURCE_LOGS/vcs-settings/*.log
-  $UPSOURCE_LOGS/vcs-settings/logs/*.log
-   {
-      rotate 7
-      daily
-      missingok
-      notifempty
-      sharedscripts
-      copytruncate
-      compress
+  {
+    rotate 7
+    daily
+    missingok
+    notifempty
+    sharedscripts
+    copytruncate
+    compress
   }
   EOF
   ```
