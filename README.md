@@ -104,6 +104,7 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
   {
     rotate 7
     daily
+    dateext
     missingok
     notifempty
     sharedscripts
