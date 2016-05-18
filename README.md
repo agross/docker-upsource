@@ -26,7 +26,7 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
   UPSOURCE_LOGS="/var/log/upsource"
 
   DOMAIN=example.com
-  PORT=8011
+  PORT=8013
   ```
 
 2. Create directories to store data and logs outside of the container.
