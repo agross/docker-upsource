@@ -76,6 +76,10 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
 
   [Service]
   Restart=always
+  # When docker stop is executed, the docker-entrypoint.sh trap + wait combination
+  # will generate an exit status of 143 = 128 + 15 (SIGTERM).
+  # More information: http://veithen.github.io/2014/11/16/sigterm-propagation.html
+  SuccessExitStatus=143
   PrivateTmp=true
   ExecStart=/usr/bin/docker start --attach=true upsource
   ExecStop=/usr/bin/docker stop --time=10 upsource
