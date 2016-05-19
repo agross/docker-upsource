@@ -9,7 +9,7 @@ EXPOSE 8080
 
 WORKDIR /upsource
 
-RUN UPSOURCE_VERSION=3.0.4291 && \
+RUN UPSOURCE_VERSION=3.0.4346 && \
     \
     echo Creating upsource user and group with static ID of 6000 && \
     addgroup -g 6000 -S upsource && \
@@ -26,8 +26,14 @@ RUN UPSOURCE_VERSION=3.0.4291 && \
     wget "$DOWNLOAD_URL" --progress bar:force:noscroll --output-document upsource.zip && \
     \
     echo Extracting to $(pwd) && \
-    unzip ./upsource.zip -d . -x internal/java/linux-amd64/man/* internal/java/windows-amd64/* internal/java/mac-x64/* && \
+    unzip ./upsource.zip \
+      -d . \
+      -x upsource-$UPSOURCE_VERSION/internal/java/linux-amd64/man/* \
+         upsource-$UPSOURCE_VERSION/internal/java/windows-amd64/* \
+         upsource-$UPSOURCE_VERSION/internal/java/mac-x64/* && \
     rm -f upsource.zip && \
+    mv upsource-$UPSOURCE_VERSION/* . && \
+    rm -rf upsource-$UPSOURCE_VERSION && \
     \
     chown -R upsource:upsource . && \
     chmod +x /docker-entrypoint.sh
