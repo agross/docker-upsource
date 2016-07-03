@@ -55,8 +55,11 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
 
   *Note:* The `:z` option on the volume mounts makes sure the SELinux context of the directories are [set appropriately.](http://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/)
 
+  `/etc/localtime` needs to be bind-mounted to use the same time zone as your docker host.
+
   ```sh
   docker create -it -p $PORT:8080 \
+                    -v /etc/localtime:/etc/localtime:ro \
                     -v "$UPSOURCE_DATA/backups:/upsource/backups:z" \
                     -v "$UPSOURCE_DATA/conf:/upsource/conf:z" \
                     -v "$UPSOURCE_DATA/data:/upsource/data:z" \
