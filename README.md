@@ -19,7 +19,27 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
 
 ## Run it as service on systemd
 
-1. Decide where to put Upsource data and logs. Set domain name/server name and the public port.
+1. Prepare systemd
+
+  system 229 and later tracks and limits a [unit's tasks](https://www.freedesktop.org/software/systemd/man/systemd.resource-control.html#TasksMax=N) to 512 by default. Tasks are the same as threads (kernel and user space threads). My Upsource container runs about 740 threads right after starting up.
+
+  If you see errors like `java.lang.OutOfMemoryError unable to create new native thread`, you need to increase the task limit of either the Upsource container systemd scope or the [default task limit](https://www.freedesktop.org/software/systemd/man/systemd-system.conf.html#DefaultTasksMax=) of all units:
+
+  ```sh
+  vim /etc/systemd/system.conf.d/default-tasks-max-required-for-upsource.conf
+  ```
+
+  Paste these lines:
+  ```
+  [Manager]
+  DefaultTasksMax=infinity
+  ```
+
+  ```sh
+  systemctl daemon-reexec
+  ```
+
+2. Decide where to put Upsource data and logs. Set domain name/server name and the public port.
 
   ```sh
   UPSOURCE_DATA="/var/data/upsource"
@@ -29,7 +49,7 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
   PORT=8013
   ```
 
-2. Create directories to store data and logs outside of the container.
+3. Create directories to store data and logs outside of the container.
 
   ```sh
   mkdir --parents "$UPSOURCE_DATA/backups" \
@@ -38,7 +58,7 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
                   "$UPSOURCE_LOGS"
   ```
 
-3. Set permissions.
+4. Set permissions.
 
   The Dockerfile creates a `upsource` user and group. This user has a `UID` and `GID` of `6000`. Make sure to add a user to your host system with this `UID` and `GID` and allow this user to read and write to `$UPSOURCE_DATA` and `$UPSOURCE_LOGS`. The name of the host user and group in not important.
 
@@ -51,7 +71,7 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
   chown -R 6000:6000 "$UPSOURCE_DATA" "$UPSOURCE_LOGS"
   ```
 
-4. Create your container.
+5. Create your container.
 
   *Note:* The `:z` option on the volume mounts makes sure the SELinux context of the directories are [set appropriately.](http://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/)
 
@@ -68,7 +88,7 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
                     agross/upsource
   ```
 
-5. Create systemd unit, e.g. `/etc/systemd/system/upsource.service`.
+6. Create systemd unit, e.g. `/etc/systemd/system/upsource.service`.
 
   ```sh
   cat <<EOF > "/etc/systemd/system/upsource.service"
@@ -95,7 +115,7 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
   systemctl start upsource.service
   ```
 
-6. Setup logrotate, e.g. `/etc/logrotate.d/upsource`.
+7. Setup logrotate, e.g. `/etc/logrotate.d/upsource`.
 
   ```sh
   cat <<EOF > "/etc/logrotate.d/upsource"
@@ -120,7 +140,7 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
   }
   EOF
   ```
-7. Add nginx configuration, e.g. `/etc/nginx/conf.d/upsource.conf`.
+8. Add nginx configuration, e.g. `/etc/nginx/conf.d/upsource.conf`.
 
   ```sh
   cat <<EOF > "/etc/nginx/conf.d/upsource.conf"
@@ -180,7 +200,7 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
   fi
   ```
 
-8. Configure Upsource.
+9. Configure Upsource.
 
   Follow the steps of the installation [instructions for JetBrains Upsource](https://confluence.jetbrains.com/display/YTD65/Installing+Upsource+with+ZIP+Distribution) using paths inside the docker container located under
 
@@ -189,7 +209,7 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
     * `/upsource/logs` and
     * `/upsource/temp`.
 
-9. Update to a newer version.
+10. Update to a newer version.
 
   ```sh
   docker pull agross/upsource
