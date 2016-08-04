@@ -1,6 +1,6 @@
 # docker-upsource
 
-[![](https://imagelayers.io/badge/agross/upsource:latest.svg)](https://imagelayers.io/?images=agross/upsource:latest 'Get your own badge on imagelayers.io')
+[![](https://images.microbadger.com/badges/image/agross/upsource.svg)](https://microbadger.com/images/agross/upsource "Get your own image badge on microbadger.com")
 
 This Dockerfile allows you to build images to deploy your own [Upsource](http://www.jetbrains.com/upsource/) instance. It has been tested on [Fedora 23](https://getfedora.org/) and [CentOS 7](https://www.centos.org/).
 
