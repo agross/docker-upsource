@@ -204,10 +204,10 @@ This Dockerfile allows you to build images to deploy your own [Upsource](http://
 
   Follow the steps of the installation [instructions for JetBrains Upsource](https://confluence.jetbrains.com/display/YTD65/Installing+Upsource+with+ZIP+Distribution) using paths inside the docker container located under
 
-    * `/upsource/backups`,
-    * `/upsource/data`,
-    * `/upsource/logs` and
-    * `/upsource/temp`.
+  * `/upsource/backups`,
+  * `/upsource/data`,
+  * `/upsource/logs` and
+  * `/upsource/temp`.
 
 10. Update to a newer version.
 
