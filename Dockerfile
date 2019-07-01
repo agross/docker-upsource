@@ -9,7 +9,7 @@ EXPOSE 8080
 
 WORKDIR /upsource
 
-RUN UPSOURCE_VERSION=2018.2.1291 && \
+RUN UPSOURCE_VERSION=2019.1.1432 && \
     \
     echo Creating upsource user and group with static ID of 6000 && \
     addgroup -g 6000 -S upsource && \
