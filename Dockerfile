@@ -9,6 +9,9 @@ EXPOSE 8080
 
 WORKDIR /upsource
 
+HEALTHCHECK --start-period=2m \
+            CMD wget --server-response --output-document=/dev/null http://localhost:8080 || exit 1
+
 RUN UPSOURCE_VERSION=2019.1.1432 && \
     \
     echo Creating upsource user and group with static ID of 6000 && \
