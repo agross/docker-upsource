@@ -12,7 +12,7 @@ WORKDIR /upsource
 HEALTHCHECK --start-period=2m \
             CMD wget --server-response --output-document=/dev/null http://localhost:8080 || exit 1
 
-ARG VERSION=2019.1.1644
+ARG VERSION=2020.1.1759
 ARG DOWNLOAD_URL=https://download.jetbrains.com/upsource/upsource-$VERSION.zip
 ARG SHA_DOWNLOAD_URL=https://download.jetbrains.com/upsource/upsource-$VERSION.zip.sha256
 
