@@ -15,7 +15,7 @@ while getopts ':tf' opt; do
       ;;
 
     '?')
-      printf 'Invalid option: -%s\n' "$OPTARG"
+      >&2 printf 'Invalid option: -%s\n' "$OPTARG"
       exit 1
       ;;
   esac
@@ -27,9 +27,12 @@ version_query="[.${code}[0].version, .${code}[0].build] | join(\".\")"
 notes_query=".${code}[0].notesLink"
 
 json="$(curl --silent --show-error "$latest_release")"
-latest="$(echo "$json" | jq --raw-output --exit-status "$version_query")"
+latest="$(jq --raw-output --exit-status "$version_query" <<< "$json")"
 current="$(sed -ne 's/ARG VERSION=//p' Dockerfile)"
-notes="$(echo "$json" | jq --raw-output --exit-status "$notes_query")"
+if ! notes="$(jq --raw-output --exit-status "$notes_query" <<< "$json")"; then
+  >&2 printf 'No release notes for version %s\n' "$latest"
+  notes=
+fi
 
 if [[ "$current" == "$latest" ]]; then
   printf '%s is still the latest release\n' "$current"
@@ -54,7 +57,11 @@ fi
 printf 'Updating Dockerfile from version %s to version %s\n' "$current" "$latest"
 sed -i "s/\(ARG VERSION=\).*/\1$latest/" Dockerfile
 
-message="$(printf 'Update to %s\n\nRelease notes: %s\n' "$latest" "$notes")"
+if [[ -n "$notes" ]]; then
+  message="$(printf 'Update to %s\n\nRelease notes: %s\n' "$latest" "$notes")"
+else
+  message="$(printf 'Update to %s\n' "$latest")"
+fi
 git commit --message "$message" \
            -- \
            Dockerfile
